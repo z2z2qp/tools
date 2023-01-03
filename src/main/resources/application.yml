@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: "work day"
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:workday}?useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2b8
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:704B2C1C67DB348E49F581318334A457}
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd
+  profiles:
+    active: prod
+  flyway:
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    locations:
+      - classpath:sql
+    sql-migration-suffixes:
+      - .sql
+app:
+  time: @maven.build.timestamp@
