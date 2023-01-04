@@ -1,6 +1,6 @@
 spring:
   application:
-    name: "work day"
+    name: "tools"
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:workday}?useSSL=false&allowMultiQueries=true&serverTimezone=GMT%2b8
     username: ${MYSQL_USERNAME:root}
@@ -17,5 +17,21 @@ spring:
       - classpath:sql
     sql-migration-suffixes:
       - .sql
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: "default"
+      paths-to-match: "/**"
+      packages-to-scan: cn.zjujri.workday
+knife4j:
+  enable: true
+  setting:
+    language: zh-CN
+    
 app:
   time: @maven.build.timestamp@

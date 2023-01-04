@@ -7,12 +7,17 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.zjujri.workday.module.Result;
 import cn.zjujri.workday.module.Workday;
 import cn.zjujri.workday.service.WorkdayService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "工作日期")
 @RestController
 public class WorkdayController {
 
@@ -27,13 +32,15 @@ public class WorkdayController {
     @Value("${app.time}")
     private String buildTime;
 
+    @Operation(summary = "项目构建时间")
     @GetMapping("/buildTime")
     private Result<String> buildTime(){
         return Result.ok(buildTime);
     } 
 
+    @Operation(summary = "是否为工作日")
     @GetMapping("/isWorkday")
-    private Result<Workday> isWorkday(String date){
+    private Result<Workday> isWorkday(@RequestParam(required = false) @Parameter(required = false,name = "date",description = "查询的日期格式为yyyy-MM-dd") String date){
         var localDate = LocalDate.now();
         if(!Objects.isNull(date)){
             localDate = LocalDate.parse(date,formatter);

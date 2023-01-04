@@ -14,5 +14,9 @@ public class GlobalExceptionHandler {
     public Result<?> dateTimeException(DateTimeException e){
         return Result.fail("无效的日期:"+e.getMessage());
     }
+    @ExceptionHandler(Exception.class)
+    public Result<?> exception(Exception e){
+        return Result.fail("内部错误:"+e.getMessage());
+    }
     
 }
