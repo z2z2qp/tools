@@ -12,7 +12,7 @@ public record Result<T>(
         return new Result<T>(200, null, null);
     }
 
-    public static <T> Result<CurrentWeather> ok(T data) {
+    public static <T> Result<T> ok(T data) {
         return new Result<T>(200, null, data);
     }
 
