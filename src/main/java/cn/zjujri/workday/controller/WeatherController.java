@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.util.ObjectUtils;
@@ -15,6 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+
+import cn.zjujri.workday.module.CurrentWeather;
+import cn.zjujri.workday.module.Result;
 import cn.zjujri.workday.module.WeatherRequest;
 import cn.zjujri.workday.service.WeatherService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,11 +79,48 @@ public class WeatherController {
             @Parameter(name = "latitude", description = "纬度", required = true)
     })
     @GetMapping("current")
-    public String weatherCurrent(
+    public Result<CurrentWeather> weatherCurrent(
             @NotNull @RequestParam(name = "longitude") Double longitude,
-            @NotNull @RequestParam(name = "latitude") Double latitude) {
+            @NotNull @RequestParam(name = "latitude") Double latitude)
+            throws JsonMappingException, JsonProcessingException {
         var result = weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true);
-        return result;
+        Map<String, Object> value = new ObjectMapper().readerForMapOf(Object.class).readValue(result);
+        Map<String, Object> currentWeather = (Map<String, Object>) value.get("current_weather");
+        Double temperature = (Double) currentWeather.get("temperature");
+        Double windspeed = (Double) currentWeather.get("windspeed");
+        Double winddirection = (Double) currentWeather.get("winddirection");
+        Integer weathercode = (Integer) currentWeather.get("weathercode");
+        String time = (String) currentWeather.get("time");
+        var currentWeatherRecord = new CurrentWeather(temperature, windspeed, winddirection, weathercode, "", time);
+        return Result.ok(currentWeatherRecord);
+    }
+
+    /**
+     * Code Description
+     * 0 Clear sky
+     * 1, 2, 3 Mainly clear, partly cloudy, and overcast
+     * 45, 48 Fog and depositing rime fog
+     * 51, 53, 55 Drizzle: Light, moderate, and dense intensity
+     * 56, 57 Freezing Drizzle: Light and dense intensity
+     * 61, 63, 65 Rain: Slight, moderate and heavy intensity
+     * 66, 67 Freezing Rain: Light and heavy intensity
+     * 71, 73, 75 Snow fall: Slight, moderate, and heavy intensity
+     * 77 Snow grains
+     * 80, 81, 82 Rain showers: Slight, moderate, and violent
+     * 85, 86 Snow showers slight and heavy
+     * 95 * Thunderstorm: Slight or moderate
+     * 96, 99 * Thunderstorm with slight and heavy hail
+     * 
+     * @param code
+     * @return
+     */
+
+    private String getWeather(int code) {
+        return switch(code){
+            case 0 -> "晴天";
+            case 1,2,3 ->
+            default -> "未知";
+        }
     }
 
 }

@@ -2,11 +2,18 @@ package cn.zjujri.workday.service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import cn.zjujri.workday.module.CurrentWeather;
 
 @SpringBootTest
 @WebAppConfiguration
@@ -30,8 +37,20 @@ public class WeatherServiceTest {
     }
 
     @Test
-    void testForecastcurrent(){
-        var result = service.forecastCurrent(13.41,52.52,"Asia/Shanghai",false);
+    void testForecastcurrent() throws JsonMappingException, JsonProcessingException{
+        var result = service.forecastCurrent(13.41,52.52,"Asia/Shanghai",true);
+        var mappger = new ObjectMapper();
+        Map<String,Object> value = mappger.readerForMapOf(Object.class).readValue(result);
+        Map<String,Object> a = (Map<String,Object>)value.get("current_weather");
+        System.out.println(a.get("winddirection").getClass());
+        System.out.println(a.get("weathercode").getClass());
+        Double temperature = (Double) a.get("temperature");
+        Double windspeed = (Double) a.get("windspeed");
+        Double winddirection = (Double) a.get("winddirection");
+        Integer weathercode = (Integer) a.get("weathercode");
+        String time = (String) a.get("time");
+        var currentWeather = new CurrentWeather(temperature,windspeed,winddirection,weathercode,"",time);
         System.out.println(result);
+        System.out.println(currentWeather);
     }
 }

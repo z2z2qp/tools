@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
-@Schema(name = "是否为工作日")
+@Schema(name = "Workday" ,title = "是否为工作日")
 @Entity
 public class Workday {
     @Id
