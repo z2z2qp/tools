@@ -17,6 +17,11 @@ spring:
       - classpath:sql
     sql-migration-suffixes:
       - .sql
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+      
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

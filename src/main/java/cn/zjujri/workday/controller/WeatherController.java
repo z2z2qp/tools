@@ -74,6 +74,13 @@ public class WeatherController {
         return result;
     }
 
+    /**
+     * @param longitude
+     * @param latitude
+     * @return
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     */
     @Operation(summary = "当前天气", parameters = {
             @Parameter(name = "longitude", description = "经度", required = true),
             @Parameter(name = "latitude", description = "纬度", required = true)
