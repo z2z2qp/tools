@@ -31,6 +31,17 @@ open class WorkdayController(val service: WorkdayService) {
     fun buildTime(): Result<String> {
         return Result.ok(buildTime!!)
     }
+    @Operation(summary = "一段时间内的日期是否为工作日")
+    @GetMapping("/isWorkdays")
+    fun isWorkdays(
+        @RequestParam(required = true) @Parameter(required = true, name = "start", description = "查询的日期格式为yyyy-MM-dd") start: String?,
+        @RequestParam(required = true) @Parameter(required = true, name = "end", description = "查询的日期格式为yyyy-MM-dd") end: String?
+    ): Result<List<Workday>> {
+        if(start === null || end === null){
+            return Result.fail("时间段不能为空")
+        }
+        return Result.ok(service.isWorkdays(LocalDate.parse(start, formatter),LocalDate.parse(end, formatter)))
+    }
 
     @Operation(summary = "是否为工作日")
     @GetMapping("/isWorkday")

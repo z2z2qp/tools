@@ -15,8 +15,8 @@ open class UrlConfig {
         // https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&current_weather=true&hourly=temperature_2m,relativehumidity_2m,windspeed_10m
         val client = WebClient.builder().baseUrl("https://api.open-meteo.com").build()
         val factory = HttpServiceProxyFactory.builder(WebClientAdapter.forClient(client)).build()
-        val c = factory.createClient(WeatherService::class.java)
-        return c
+        val clazz: Class<WeatherService> = WeatherService::class.java
+        return factory.createClient(clazz)
     }
 
 }
