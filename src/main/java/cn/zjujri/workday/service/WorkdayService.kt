@@ -39,7 +39,7 @@ open class WorkdayService(private val workdayRepository: WorkdayRepository) {
                 { t, u -> t.putAll(u) })
         val result = ArrayList<Workday>()
         var day = start
-        while (day.isBefore(end)) {//循环从起始日期开始到结束日期
+        while (!day.isAfter(end)) {//循环从起始日期开始到结束日期
             val r = dbResult[day]
             if (r === null){//查询假日办信息，若无按双休计算工作日
                 val weekend = day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY
