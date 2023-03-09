@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
 @EnableJpaRepositories
-open class WorkdayApplication
+class WorkdayApplication
 
 fun main(args: Array<String>) {
     SpringApplication.run(WorkdayApplication::class.java, *args)
