@@ -1,7 +1,10 @@
 # build
 ```shell
 ./gradlew clean build -x test
-
+```
+# image
+```shell
+docker build -t tools .
 ```
 
 # 根据每年假日办文件

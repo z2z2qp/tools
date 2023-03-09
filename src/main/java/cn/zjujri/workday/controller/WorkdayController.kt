@@ -1,6 +1,7 @@
 package cn.zjujri.workday.controller
 
 import cn.zjujri.workday.module.Result
+import cn.zjujri.workday.module.Version
 import cn.zjujri.workday.module.Workday
 import cn.zjujri.workday.service.WorkdayService
 import io.swagger.v3.oas.annotations.Operation
@@ -23,13 +24,12 @@ open class WorkdayController(val service: WorkdayService) {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
 
-    @Value("\${app.time}")
-    var buildTime: String? = null
+    var buildTime: String = Version.buildTime
 
     @Operation(summary = "项目构建时间")
     @GetMapping("/buildTime")
     fun buildTime(): Result<String> {
-        return Result.ok(buildTime!!)
+        return Result.ok(buildTime)
     }
     @Operation(summary = "一段时间内的日期是否为工作日")
     @GetMapping("/isWorkdays")
