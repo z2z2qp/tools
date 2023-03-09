@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
-import java.util.function.BiConsumer
-import java.util.function.Supplier
 
 @Service
 open class WorkdayService(private val workdayRepository: WorkdayRepository) {
@@ -41,12 +39,12 @@ open class WorkdayService(private val workdayRepository: WorkdayRepository) {
         var day = start
         while (!day.isAfter(end)) {//循环从起始日期开始到结束日期
             val r = dbResult[day]
-            if (r === null){//查询假日办信息，若无按双休计算工作日
+            if (r === null) {//查询假日办信息，若无按双休计算工作日
                 val weekend = day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY
-                val isWorkday = if(weekend) 0 else 1
-                val workday = Workday(day,isWorkday)
+                val isWorkday = if (weekend) 0 else 1
+                val workday = Workday(day, isWorkday)
                 result.add(workday)
-            }else{//假日办信息直接插入
+            } else {//假日办信息直接插入
                 result.add(r)
             }
             day = day.plusDays(1)

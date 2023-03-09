@@ -3,6 +3,7 @@ package cn.zjujri.workday.module
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import org.hibernate.Hibernate
 import java.time.LocalDate
 
 @Entity
@@ -20,4 +21,19 @@ data class Workday(
 ) {
     constructor() : this(null, null)
     constructor(date: LocalDate?, workday: Int?) : this(date, workday, null)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
+        other as Workday
+
+        return date != null && date == other.date
+    }
+
+    override fun hashCode(): Int = javaClass.hashCode()
+
+    @Override
+    override fun toString(): String {
+        return this::class.simpleName + "(date = $date , workday = $workday , reason = $reason )"
+    }
 }

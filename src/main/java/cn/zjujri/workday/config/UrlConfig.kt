@@ -1,4 +1,4 @@
-package cn.zjujri.workday.config;
+package cn.zjujri.workday.config
 
 import cn.zjujri.workday.service.WeatherService
 import org.springframework.context.annotation.Bean

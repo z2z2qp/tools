@@ -10,9 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.constraints.NotNull
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.util.ObjectUtils
-import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -30,32 +28,34 @@ open class WeatherController(private val weatherService: WeatherService) {
 
 
     // https://open-meteo.com/en/docs
-    @Operation(summary = "历史天气", parameters = [
-        Parameter(name = "longitude", description = "经度", required = true),
-        Parameter(name = "latitude", description = "纬度", required = true),
-        Parameter(name = "startDate", description = "开始时间", required = true),
-        Parameter(name = "endDate", description = "结束时间", required = true),
-        Parameter(name = "hourly", description = "每小时数据使用\",\"隔开", required = true),
-    ])
+    @Operation(
+        summary = "历史天气", parameters = [
+            Parameter(name = "longitude", description = "经度", required = true),
+            Parameter(name = "latitude", description = "纬度", required = true),
+            Parameter(name = "startDate", description = "开始时间", required = true),
+            Parameter(name = "endDate", description = "结束时间", required = true),
+            Parameter(name = "hourly", description = "每小时数据使用\",\"隔开", required = true),
+        ]
+    )
     @GetMapping("history")
     fun weatherHistory(
-            @NotNull @RequestParam(name = "longitude") longitude: Double?,
-            @NotNull @RequestParam(name = "latitude") latitude: Double?,
-            @NotNull @RequestParam(name = "startDate") startDate: String?,
-            @NotNull @RequestParam(name = "endDate") endDate: String?,
-            @NotNull @RequestParam(name = "hourly") hourly: String?): String {
+        @NotNull @RequestParam(name = "longitude") longitude: Double?,
+        @NotNull @RequestParam(name = "latitude") latitude: Double?,
+        @NotNull @RequestParam(name = "startDate") startDate: String?,
+        @NotNull @RequestParam(name = "endDate") endDate: String?,
+        @NotNull @RequestParam(name = "hourly") hourly: String?
+    ): String {
         val list = ArrayList<String>()
         if (ObjectUtils.isEmpty(hourly)) {
             list.add("temperature_2m")
         } else {
-            val strs = hourly!!.split(",")
-            for (s in strs) {
+            for (s in hourly!!.split(",")) {
                 if (!ObjectUtils.isEmpty(s)) {
                     list.add(s)
                 }
             }
         }
-        return weatherService!!.forecastHistory(latitude, longitude, startDate, endDate, DEFAULT_TIMEZONE, list)
+        return weatherService.forecastHistory(latitude, longitude, startDate, endDate, DEFAULT_TIMEZONE, list)
     }
 
     /**
@@ -65,23 +65,27 @@ open class WeatherController(private val weatherService: WeatherService) {
      * @throws JsonMappingException
      * @throws JsonProcessingException
      */
-    @Operation(summary = "当前天气", parameters = [
-        Parameter(name = "longitude", description = "经度", required = true),
-        Parameter(name = "latitude", description = "纬度", required = true)
-    ])
+    @Operation(
+        summary = "当前天气", parameters = [
+            Parameter(name = "longitude", description = "经度", required = true),
+            Parameter(name = "latitude", description = "纬度", required = true)
+        ]
+    )
     @GetMapping("current")
     fun weatherCurrent(
-            @NotNull @RequestParam(name = "longitude") longitude: Double,
-            @NotNull @RequestParam(name = "latitude") latitude: Double): Result<CurrentWeather> {
-        val result = weatherService!!.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true)
+        @NotNull @RequestParam(name = "longitude") longitude: Double,
+        @NotNull @RequestParam(name = "latitude") latitude: Double
+    ): Result<CurrentWeather> {
+        val result = weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true)
         val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(result) as Map<String, Any>
         val currentWeather = value["current_weather"] as Map<*, *>
         val temperature = currentWeather["temperature"] as Double
-        val windspeed = currentWeather["windspeed"] as Double
-        val winddirection = currentWeather["winddirection"] as Double
-        val weathercode = currentWeather["weathercode"] as Int
+        val windSpeed = currentWeather["windspeed"] as Double
+        val windDirection = currentWeather["winddirection"] as Double
+        val weatherCode = currentWeather["weathercode"] as Int
         val time = currentWeather["time"] as String
-        val currentWeatherRecord = CurrentWeather(temperature, windspeed, winddirection, weathercode, getWeather(weathercode), time)
+        val currentWeatherRecord =
+            CurrentWeather(temperature, windSpeed, windDirection, weatherCode, getWeather(weatherCode), time)
         return Result.ok(currentWeatherRecord)
     }
 
