@@ -7,6 +7,6 @@ RUN mkdir -p /home/JRI
 
 WORKDIR /home/JRI
 
-COPY target/tools.jar /home/JRI/app.jar
+COPY build/libs/*.jar /home/JRI/app.jar
 
 ENTRYPOINT [ "java","-jar","app.jar" ]
