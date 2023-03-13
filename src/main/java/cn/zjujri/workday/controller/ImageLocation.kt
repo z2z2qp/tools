@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile
 @Tag(name = "图片")
 @RestController
 @RequestMapping("image")
-open class ImageLocation(private val metaDataService: MetaDataService) {
+class ImageLocation(private val metaDataService: MetaDataService) {
 
 
     @Operation(summary = "获取经纬度")

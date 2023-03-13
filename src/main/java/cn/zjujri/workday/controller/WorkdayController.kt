@@ -7,7 +7,6 @@ import cn.zjujri.workday.service.WorkdayService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -18,7 +17,7 @@ import java.util.*
 
 @Tag(name = "工作日期")
 @RestController
-open class WorkdayController(val service: WorkdayService) {
+class WorkdayController(val service: WorkdayService) {
 
 
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -31,22 +30,35 @@ open class WorkdayController(val service: WorkdayService) {
     fun buildTime(): Result<String> {
         return Result.ok(buildTime)
     }
+
     @Operation(summary = "一段时间内的日期是否为工作日")
     @GetMapping("/isWorkdays")
     fun isWorkdays(
-        @RequestParam(required = true) @Parameter(required = true, name = "start", description = "查询的日期格式为yyyy-MM-dd") start: String?,
-        @RequestParam(required = true) @Parameter(required = true, name = "end", description = "查询的日期格式为yyyy-MM-dd") end: String?
+        @RequestParam(required = true) @Parameter(
+            required = true,
+            name = "start",
+            description = "查询的日期格式为yyyy-MM-dd"
+        ) start: String?,
+        @RequestParam(required = true) @Parameter(
+            required = true,
+            name = "end",
+            description = "查询的日期格式为yyyy-MM-dd"
+        ) end: String?
     ): Result<List<Workday>> {
-        if(start === null || end === null){
+        if (start === null || end === null) {
             return Result.fail("时间段不能为空")
         }
-        return Result.ok(service.isWorkdays(LocalDate.parse(start, formatter),LocalDate.parse(end, formatter)))
+        return Result.ok(service.isWorkdays(LocalDate.parse(start, formatter), LocalDate.parse(end, formatter)))
     }
 
     @Operation(summary = "是否为工作日")
     @GetMapping("/isWorkday")
     fun isWorkday(
-        @RequestParam(required = false) @Parameter(required = false, name = "date", description = "查询的日期格式为yyyy-MM-dd") date: String?
+        @RequestParam(required = false) @Parameter(
+            required = false,
+            name = "date",
+            description = "查询的日期格式为yyyy-MM-dd"
+        ) date: String?
     ): Result<Workday> {
         var localDate = LocalDate.now()
         if (!Objects.isNull(date)) {

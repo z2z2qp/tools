@@ -8,7 +8,7 @@ import java.time.LocalDate
 import java.util.concurrent.atomic.AtomicReference
 
 @Service
-open class WorkdayService(private val workdayRepository: WorkdayRepository) {
+class WorkdayService(private val workdayRepository: WorkdayRepository) {
 
 
     fun isWorkday(localDate: LocalDate): Workday {

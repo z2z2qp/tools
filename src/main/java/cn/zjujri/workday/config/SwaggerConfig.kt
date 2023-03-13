@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class SwaggerConfig {
+class SwaggerConfig {
 
     @Bean
-    open fun openAPI(): OpenAPI {
+    fun openAPI(): OpenAPI {
         return OpenAPI()
                 .info(Info()
                         .title("小工具集")

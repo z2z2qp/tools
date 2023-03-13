@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController
 @Tag(name = "天气接口")
 @RestController
 @RequestMapping("/weather")
-open class WeatherController(private val weatherService: WeatherService) {
+class WeatherController(private val weatherService: WeatherService) {
 
     companion object {
         const val DEFAULT_TIMEZONE = "Asia/Shanghai"

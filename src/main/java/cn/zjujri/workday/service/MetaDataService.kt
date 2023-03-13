@@ -10,7 +10,7 @@ import java.io.InputStream
 import java.util.*
 
 @Service
-open class MetaDataService {
+class MetaDataService {
 
     fun parseLocation(image: InputStream): Optional<GeoLocation> {
         try {
