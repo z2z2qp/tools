@@ -66,6 +66,25 @@ def static oldValue(String path, String key) {
     return readString
 }
 
+graalvmNative {
+    binaries {
+        main {
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.Logger")
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.FileSize")
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.Duration")
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.Level")
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.model.ConfigurationModel")
+            buildArgs.add("--trace-class-initialization=org.slf4j.LoggerFactory")
+            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.Loader")
+//            buildArgs.add("--trace-object-instantiation=ch.qos.logback.classic.Logger")
+//            buildArgs.add("--trace-object-instantiation=ch.qos.logback.core.util.FileSize")
+//            buildArgs.add("--trace-object-instantiation=ch.qos.logback.core.util.Duration")
+//            buildArgs.add("--trace-object-instantiation=ch.qos.logback.classic.Level")
+            buildArgs.add("-H:+ReportExceptionStackTraces")
+        }
+    }
+}
+
 tasks.named('test') {
     useJUnitPlatform()
 }
