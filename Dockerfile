@@ -9,6 +9,6 @@ EXPOSE 8080
 
 WORKDIR /home/JRI
 
-COPY build/libs/*.jar /home/JRI/app.jar
+COPY build/libs/tools-*-SNAPSHOT.jar /home/JRI/app.jar
 
 ENTRYPOINT [ "java","-jar","app.jar" ]
