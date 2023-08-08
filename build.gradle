@@ -1,11 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id 'org.springframework.boot' version '3.0.4'
-    id 'io.spring.dependency-management' version '1.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
-    id 'org.jetbrains.kotlin.plugin.spring' version '1.8.10'
-    id 'org.graalvm.buildtools.native' version '0.9.20'
+    id 'org.springframework.boot' version '3.1.2'
+    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.0'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.9.0'
+    id 'org.graalvm.buildtools.native' version '0.9.23'
 }
 
 group = 'cn.zjujri'
@@ -23,8 +23,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.8.22'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.22'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -69,13 +69,31 @@ def static oldValue(String path, String key) {
 graalvmNative {
     binaries {
         main {
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.Logger")
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.FileSize")
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.Duration")
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.Level")
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.classic.model.ConfigurationModel")
-            buildArgs.add("--trace-class-initialization=org.slf4j.LoggerFactory")
-            buildArgs.add("--trace-class-initialization=ch.qos.logback.core.util.Loader")
+            buildArgs(
+                "--initialize-at-run-time=ch.qos.logback.core.util.Duration," +
+                    "ch.qos.logback.classic.Level," +
+                    "ch.qos.logback.core.util.FileSize," +
+                    "ch.qos.logback.classic.Logger," +
+                    "io.grpc.netty.shaded.io.netty.channel.MultithreadEventLoopGroup," +
+                    "io.grpc.netty.shaded.io.netty.channel.ChannelOption," +
+                    "io.grpc.netty.shaded.io.netty.util.ReferenceCountUtil," +
+                    "io.grpc.netty.shaded.io.netty.channel.AbstractChannel," +
+                    "io.grpc.netty.shaded.io.netty.util.internal.SystemPropertyUtil," +
+                    "io.grpc.netty.shaded.io.netty.channel.AbstractChannel",
+                "--trace-class-initialization=ch.qos.logback.classic.Level," +
+                    "ch.qos.logback.core.util.Duration," +
+                    "io.grpc.netty.shaded.io.netty.util.internal.SystemPropertyUtil," +
+                    "ch.qos.logback.classic.model.ConfigurationModel," +
+                    "ch.qos.logback.core.util.FileSize," +
+                    "ch.qos.logback.classic.Logger"
+            )
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.classic.Logger")
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.core.util.FileSize")
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.core.util.Duration")
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.classic.Level")
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.classic.model.ConfigurationModel")
+//            buildArgs.add("--initialize-at-run-time=org.slf4j.LoggerFactory")
+//            buildArgs.add("--initialize-at-run-time=ch.qos.logback.core.util.Loader")
 //            buildArgs.add("--trace-object-instantiation=ch.qos.logback.classic.Logger")
 //            buildArgs.add("--trace-object-instantiation=ch.qos.logback.core.util.FileSize")
 //            buildArgs.add("--trace-object-instantiation=ch.qos.logback.core.util.Duration")
