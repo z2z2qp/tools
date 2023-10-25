@@ -25,6 +25,17 @@ class WorkdayService(private val workdayRepository: WorkdayRepository) {
         return result.get()
     }
 
+    fun minYear(): Int {
+        val year = workdayRepository.minDate().substring(0, 4)
+        return year.toInt()
+    }
+
+    fun maxYear(): Int {
+        val year = workdayRepository.maxDate().substring(0, 4)
+        return year.toInt()
+
+    }
+
     fun isWorkdays(start: LocalDate, end: LocalDate): List<Workday> {
         //查询时间段内所有假日办发布信息，并修改为Map<LocalDate, Workday?>
         val dbResult = workdayRepository.findByDateGreaterThanEqualAndDateLessThanEqual(start, end)

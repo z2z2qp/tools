@@ -64,11 +64,13 @@ class WorkdayController(val service: WorkdayService) {
         if (!Objects.isNull(date)) {
             localDate = LocalDate.parse(date, formatter)
         }
-        if (localDate.isBefore(LocalDate.of(2023, Month.JANUARY, 1))) {
-            return Result.fail("日期不能早与 2023年")
+        var min = service.minYear()
+        var max = service.maxYear()
+        if (localDate.isBefore(LocalDate.of(min, Month.JANUARY, 1))) {
+            return Result.fail("日期不能早与 $min 年")
         }
-        if (localDate.isAfter(LocalDate.of(2023, Month.DECEMBER, 31))) {
-            return Result.fail("日期不能晚于 2023年")
+        if (localDate.isAfter(LocalDate.of(max, Month.DECEMBER, 31))) {
+            return Result.fail("日期不能晚于 $max 年")
         }
         return Result.ok(service.isWorkday(localDate))
     }
