@@ -5,24 +5,21 @@ import cn.zjujri.workday.repository.WorkdayRepository
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.util.concurrent.atomic.AtomicReference
+import kotlin.jvm.optionals.getOrElse
 
 @Service
 class WorkdayService(private val workdayRepository: WorkdayRepository) {
 
 
     fun isWorkday(localDate: LocalDate): Workday {
-        val result = AtomicReference<Workday>()
-        workdayRepository.findById(localDate).ifPresentOrElse({
-            result.set(it)
-        }, {
+        val result = workdayRepository.findById(localDate).getOrElse {
             val isWorkday = when (localDate.dayOfWeek) {
                 DayOfWeek.SATURDAY, DayOfWeek.SUNDAY -> 0
                 else -> 1
             }
-            result.set(Workday(localDate, isWorkday))
-        })
-        return result.get()
+            Workday(localDate, isWorkday)
+        }
+        return result
     }
 
     fun minYear(): Int {
