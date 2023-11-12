@@ -31,8 +31,8 @@ public class WeatherServiceTest {
         // map.put("latitude", List.of("52.52"));
         // map.put("current_weather", List.of("true"));
         // map.put("hourly", List.of("temperature_2m","relativehumidity_2m","windspeed_10m"));
-        var result = service.forecastHistory(13.41,52.52,"2023-01-03","2023-01-04","Asia/Shanghai",List.of("temperature_2m","relativehumidity_2m","windspeed_10m"));
-        System.out.println(result);
+//        var result = service.forecastHistory(13.41,52.52,"2023-01-03","2023-01-04","Asia/Shanghai",List.of("temperature_2m","relativehumidity_2m","windspeed_10m"));
+//        System.out.println(result);
 
     }
 
@@ -44,10 +44,10 @@ public class WeatherServiceTest {
         Map<String,Object> a = (Map<String,Object>)value.get("current_weather");
         System.out.println(a.get("winddirection").getClass());
         System.out.println(a.get("weathercode").getClass());
-        Double temperature = (Double) a.get("temperature");
-        Double windspeed = (Double) a.get("windspeed");
-        Double winddirection = (Double) a.get("winddirection");
-        Integer weathercode = (Integer) a.get("weathercode");
+        Number temperature = (Number) a.get("temperature");
+        Number windspeed = (Number) a.get("windspeed");
+        Number winddirection = (Number) a.get("winddirection");
+        Number weathercode = (Number) a.get("weathercode");
         String time = (String) a.get("time");
         var currentWeather = new CurrentWeather(temperature,windspeed,winddirection,weathercode,"",time);
         System.out.println(result);

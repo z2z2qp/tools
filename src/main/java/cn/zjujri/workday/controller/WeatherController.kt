@@ -79,9 +79,9 @@ class WeatherController(private val weatherService: WeatherService) {
         val result = weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true)
         val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(result) as Map<String, Any>
         val currentWeather = value["current_weather"] as Map<*, *>
-        val temperature = currentWeather["temperature"] as Double
-        val windSpeed = currentWeather["windspeed"] as Double
-        val windDirection = currentWeather["winddirection"] as Double
+        val temperature = currentWeather["temperature"] as Number
+        val windSpeed = currentWeather["windspeed"] as Number
+        val windDirection = currentWeather["winddirection"] as Number
         val weatherCode = currentWeather["weathercode"] as Int
         val time = currentWeather["time"] as String
         val currentWeatherRecord =
