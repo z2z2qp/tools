@@ -3,6 +3,7 @@ package cn.zjujri.workday.service
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.service.annotation.GetExchange
 import org.springframework.web.service.annotation.HttpExchange
+import reactor.core.publisher.Mono
 
 @HttpExchange
 interface WeatherService {
@@ -15,12 +16,12 @@ interface WeatherService {
         @RequestParam(name = "start_date") startDate: String?,
         @RequestParam(name = "end_date") endDate: String?,
         @RequestParam(name = "timezone", defaultValue = "Asia/Shanghai") timezone: String?,
-        @RequestParam(name = "hourly") hourly: List<String>?): String
+        @RequestParam(name = "hourly") hourly: List<String>?): Mono<String>
 
     @GetExchange("/v1/forecast")
     fun forecastCurrent(
         @RequestParam(name = "latitude") latitude: Double?,
         @RequestParam(name = "longitude") longitude: Double?,
         @RequestParam(name = "timezone", defaultValue = "Asia/Shanghai") timezone: String?,
-        @RequestParam(name = "current_weather", defaultValue = "true") currentWeather: Boolean?): String
+        @RequestParam(name = "current_weather", defaultValue = "true") currentWeather: Boolean?): Mono<String>
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Mono
 
 
 @Tag(name = "天气接口")
@@ -44,7 +45,7 @@ class WeatherController(private val weatherService: WeatherService) {
         @NotNull @RequestParam(name = "startDate") startDate: String?,
         @NotNull @RequestParam(name = "endDate") endDate: String?,
         @NotNull @RequestParam(name = "hourly") hourly: String?
-    ): String {
+    ): Mono<String> {
         val list = ArrayList<String>()
         if (ObjectUtils.isEmpty(hourly)) {
             list.add("temperature_2m")
@@ -75,18 +76,17 @@ class WeatherController(private val weatherService: WeatherService) {
     fun weatherCurrent(
         @NotNull @RequestParam(name = "longitude") longitude: Double,
         @NotNull @RequestParam(name = "latitude") latitude: Double
-    ): Result<CurrentWeather> {
-        val result = weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true)
-        val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(result) as Map<String, Any>
-        val currentWeather = value["current_weather"] as Map<*, *>
-        val temperature = currentWeather["temperature"] as Number
-        val windSpeed = currentWeather["windspeed"] as Number
-        val windDirection = currentWeather["winddirection"] as Number
-        val weatherCode = currentWeather["weathercode"] as Int
-        val time = currentWeather["time"] as String
-        val currentWeatherRecord =
-            CurrentWeather(temperature, windSpeed, windDirection, weatherCode, getWeather(weatherCode), time)
-        return Result.ok(currentWeatherRecord)
+    ): Mono<Result<CurrentWeather>> {
+        return weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true).map {
+            val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(it) as Map<String, Any>
+            val currentWeather = value["current_weather"] as Map<*, *>
+            val temperature = currentWeather["temperature"] as Number
+            val windSpeed = currentWeather["windspeed"] as Number
+            val windDirection = currentWeather["winddirection"] as Number
+            val weatherCode = currentWeather["weathercode"] as Int
+            val time = currentWeather["time"] as String
+            Result.ok(CurrentWeather(temperature, windSpeed, windDirection, weatherCode, getWeather(weatherCode), time))
+        }
     }
 
     /**
