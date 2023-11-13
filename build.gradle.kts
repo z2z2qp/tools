@@ -7,18 +7,19 @@ plugins {
     id("org.springframework.boot").version("3.1.5")
     id("io.spring.dependency-management").version("1.1.3")
     id("org.hibernate.orm").version("6.2.13.Final")
-    kotlin("jvm").version("1.9.10")
-    kotlin("plugin.spring").version("1.9.10")
-    kotlin("plugin.jpa").version("1.9.10")
+    kotlin("jvm").version("1.9.20")
+    kotlin("plugin.spring").version("1.9.20")
+    kotlin("plugin.jpa").version("1.9.20")
 //    id("org.graalvm.buildtools.native").version("0.9.20")
 }
 
 group = "cn.zjujri"
 version = "0.0.7-SNAPSHOT"
 java{
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
+
 
 repositories {
 //    maven {
@@ -49,8 +50,14 @@ dependencies {
 
 tasks.withType<KotlinCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
-    kotlinOptions.jvmTarget = "17"
-//    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+
+}
+tasks.withType<KotlinJvmCompile>().configureEach {
+//    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
+    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
 
 }
 
