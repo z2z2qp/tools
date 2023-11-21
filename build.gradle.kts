@@ -16,8 +16,8 @@ plugins {
 group = "cn.zjujri"
 version = "0.0.7-SNAPSHOT"
 java{
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 
@@ -40,7 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
-//    implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.0.0")
+//    implementation("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.3.0")
     implementation("com.drewnoakes:metadata-extractor:2.18.0")
     implementation("org.flywaydb:flyway-core:9.16.0")
     runtimeOnly("com.h2database:h2:2.1.214")
@@ -50,13 +50,13 @@ dependencies {
 
 tasks.withType<KotlinCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
-    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.jvmTarget = "17"
     kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
 
 }
 tasks.withType<KotlinJvmCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
-    kotlinOptions.jvmTarget = "21"
+    kotlinOptions.jvmTarget = "17"
     kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
 
 }
@@ -134,6 +134,6 @@ fun oldValue(path:String,key:String): String {
 //    }
 //}
 
-//tasks.named("test") {
-//    useJUnitPlatform()
-//}
+tasks.test {
+    useJUnitPlatform()
+}
