@@ -22,18 +22,31 @@ data class Workday(
     constructor() : this(null, null)
     constructor(date: LocalDate?, workday: Int?) : this(date, workday, null)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || Hibernate.getClass(this) != Hibernate.getClass(other)) return false
-        other as Workday
 
-        return date != null && date == other.date
-    }
 
-    override fun hashCode(): Int = javaClass.hashCode()
 
     @Override
     override fun toString(): String {
         return this::class.simpleName + "(date = $date , workday = $workday , reason = $reason )"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Workday
+
+        if (date != other.date) return false
+        if (workday != other.workday) return false
+        if (reason != other.reason) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = date?.hashCode() ?: 0
+        result = 31 * result + (workday ?: 0)
+        result = 31 * result + (reason?.hashCode() ?: 0)
+        return result
     }
 }
