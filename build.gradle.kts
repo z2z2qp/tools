@@ -39,6 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
 //    implementation("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.3.0")
     implementation("com.drewnoakes:metadata-extractor:2.18.0")
