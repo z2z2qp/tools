@@ -13,13 +13,14 @@ class SwaggerConfig {
     @Bean
     fun openAPI(): OpenAPI {
         return OpenAPI()
-                .info(Info()
-                        .title("小工具集")
-                        .description("小工具集")
-                        .version("1.0.0")
-                        .license(License().name("null"))
-                )
-                .externalDocs(ExternalDocumentation().description("小工具集"))
+            .info(
+                Info()
+                    .title("小工具集")
+                    .description("小工具集")
+                    .version("1.0.0")
+                    .license(License().name("null"))
+            )
+            .externalDocs(ExternalDocumentation().description("小工具集"))
     }
 
 }

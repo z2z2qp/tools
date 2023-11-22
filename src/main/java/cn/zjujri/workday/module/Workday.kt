@@ -3,7 +3,6 @@ package cn.zjujri.workday.module
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.persistence.Entity
 import jakarta.persistence.Id
-import org.hibernate.Hibernate
 import java.time.LocalDate
 
 @Entity
@@ -21,8 +20,6 @@ data class Workday(
 ) {
     constructor() : this(null, null)
     constructor(date: LocalDate?, workday: Int?) : this(date, workday, null)
-
-
 
 
     @Override

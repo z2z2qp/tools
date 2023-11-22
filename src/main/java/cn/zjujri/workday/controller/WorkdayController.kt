@@ -64,8 +64,8 @@ class WorkdayController(val service: WorkdayService) {
         if (!Objects.isNull(date)) {
             localDate = LocalDate.parse(date, formatter)
         }
-        var min = service.minYear()
-        var max = service.maxYear()
+        val min = service.minYear()
+        val max = service.maxYear()
         if (localDate.isBefore(LocalDate.of(min, Month.JANUARY, 1))) {
             return Result.fail("日期不能早与 $min 年")
         }
