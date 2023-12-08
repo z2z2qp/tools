@@ -8,6 +8,6 @@ package cn.zjujri.workday.module
  */
 class Version {
     companion object {
-        const val buildTime = "2023-03-09 16:54:32"
+        const val buildTime ="Fri Dec 08 14:33:13 CST 2023"
     }
 }
