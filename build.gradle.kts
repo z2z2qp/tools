@@ -1,10 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
-import java.util.Date
+import java.util.*
 
 plugins {
     id("java")
-    id("org.springframework.boot").version("3.1.5")
+    id("org.springframework.boot").version("3.2.0")
     id("io.spring.dependency-management").version("1.1.3")
     id("org.hibernate.orm").version("6.2.13.Final")
     kotlin("jvm").version("1.9.20")
@@ -15,9 +15,10 @@ plugins {
 
 group = "cn.zjujri"
 version = "0.0.7-SNAPSHOT"
-java{
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+java {
+    setSourceCompatibility("17")
+    setTargetCompatibility("17")
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 
@@ -49,6 +50,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
+
 tasks.withType<KotlinCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
     kotlinOptions.jvmTarget = "17"
@@ -63,7 +65,8 @@ tasks.withType<KotlinJvmCompile>().configureEach {
 }
 
 tasks.register("updateVersion") {
-    val versionFileDir ="${projectDir.absolutePath}${File.separatorChar}src${File.separatorChar}main${File.separatorChar}java${File.separatorChar}cn${File.separatorChar}zjujri${File.separatorChar}workday${File.separatorChar}module${File.separatorChar}Version.kt"
+    val versionFileDir =
+        "${projectDir.absolutePath}${File.separatorChar}src${File.separatorChar}main${File.separatorChar}java${File.separatorChar}cn${File.separatorChar}zjujri${File.separatorChar}workday${File.separatorChar}module${File.separatorChar}Version.kt"
     val oldBuildTime = oldValue(versionFileDir, "buildTime")
     val index = oldBuildTime.indexOf("=")
     val buildTime = "${oldBuildTime.substring(0, index + 1)}\"${Date()}\""
@@ -71,7 +74,7 @@ tasks.register("updateVersion") {
     File(versionFileDir).writeText(updateContext)
 }
 
-fun oldValue(path:String,key:String): String {
+fun oldValue(path: String, key: String): String {
     var readString = ""
     File(path).readLines().forEach {
         if (it.contains(key)) {
