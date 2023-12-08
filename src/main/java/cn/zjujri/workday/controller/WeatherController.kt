@@ -46,16 +46,24 @@ class WeatherController(private val weatherService: WeatherService) {
         @NotNull @RequestParam(name = "endDate") endDate: String?,
         @NotNull @RequestParam(name = "hourly") hourly: String?
     ): Mono<String> {
+        // 创建一个String类型的ArrayList对象list
+
         val list = ArrayList<String>()
+
+        // 判断hourly是否为空
         if (ObjectUtils.isEmpty(hourly)) {
-            list.add("temperature_2m")
+            list.add("temperature_2m") // 如果hourly为空，则向list中添加"temperature_2m"
         } else {
+            // 将hourly按照逗号进行分割，遍历分割后的每一个元素
             for (s in hourly!!.split(",")) {
+                // 判断s是否为空
                 if (!ObjectUtils.isEmpty(s)) {
-                    list.add(s)
+                    list.add(s) // 如果s不为空，则向list中添加s
                 }
             }
         }
+
+        // 调用weatherService类的forecastHistory方法，传入latitude、longitude、startDate、endDate、DEFAULT_TIMEZONE和list作为参数，并返回结果
         return weatherService.forecastHistory(latitude, longitude, startDate, endDate, DEFAULT_TIMEZONE, list)
     }
 
@@ -78,15 +86,33 @@ class WeatherController(private val weatherService: WeatherService) {
         @NotNull @RequestParam(name = "latitude") latitude: Double
     ): Mono<Result<CurrentWeather>> {
         return weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true).map {
+            // 将返回的JSON字符串转换为Map对象
             val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(it) as Map<String, Any>
+            // 获取当前天气信息
             val currentWeather = value["current_weather"] as Map<*, *>
+            // 获取温度信息
             val temperature = currentWeather["temperature"] as Number
+            // 获取风速信息
             val windSpeed = currentWeather["windspeed"] as Number
+            // 获取风向信息
             val windDirection = currentWeather["winddirection"] as Number
+            // 获取天气代码信息
             val weatherCode = currentWeather["weathercode"] as Int
+            // 获取天气信息发生时间
             val time = currentWeather["time"] as String
-            Result.ok(CurrentWeather(temperature, windSpeed, windDirection, weatherCode, getWeather(weatherCode), time))
+            // 创建并返回当前天气结果对象
+            Result.ok(
+                CurrentWeather(
+                    temperature,
+                    windSpeed,
+                    windDirection,
+                    weatherCode,
+                    getWeather(weatherCode),
+                    time
+                )
+            )
         }
+
     }
 
     /**
