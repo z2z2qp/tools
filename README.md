@@ -2,8 +2,8 @@
 ```shell
 ./gradlew clean build -x test
 ```
-# native build  
-## windows 环境下必须使用vs提供的一个命令行工具，否则失败
+# ~~ native build ~~ 
+## ~~ windows 环境下必须使用vs提供的一个命令行工具，否则失败 ~~
 ```shell
 ./gradlew clean build nativeBuild -x test
 ```
