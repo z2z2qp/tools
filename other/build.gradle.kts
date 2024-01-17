@@ -1,31 +1,35 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 import java.util.Date
 
 plugins {
-    id("org.springframework.boot").version("3.0.4")
-    id("io.spring.dependency-management").version("1.1.0")
-    id("org.jetbrains.kotlin.jvm").version("1.8.10")
-    id("org.jetbrains.kotlin.plugin.spring").version("1.8.10")
+    id("java")
+    id("org.springframework.boot").version("3.1.5")
+    id("io.spring.dependency-management").version("1.1.3")
+    id("org.hibernate.orm").version("6.2.13.Final")
+    id("org.jetbrains.kotlin.jvm").version("1.9.20")
+    id("org.jetbrains.kotlin.plugin.spring").version("1.9.20")
+    id("org.jetbrains.kotlin.plugin.jpa").version("1.9.20")
 //    id("org.graalvm.buildtools.native").version("0.9.20")
 }
 
 group = "cn.zjujri"
 version = "0.0.6-SNAPSHOT"
 java{
-    sourceCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 repositories {
-    maven {
-        allowInsecureProtocol = true
-        url = uri("http://10.100.1.235:8081/repository/maven-public/")
-
-    }
+//    maven {
+//        isAllowInsecureProtocol = true
+//        url = uri("http://10.100.1.235:8081/repository/maven-public/")
+//
+//    }
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+//    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
@@ -33,18 +37,25 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.0.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
+//    implementation("com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.0.0")
     implementation("com.drewnoakes:metadata-extractor:2.18.0")
-    implementation("org.flywaydb:flyway-core:9.10.1")
+    implementation("org.flywaydb:flyway-core:9.16.0")
     runtimeOnly("com.h2database:h2:2.1.214")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
+tasks.withType<KotlinJvmCompile>().configureEach {
+//    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
+    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
+
+}
 
 //tasks.withType(KotlinCompile).configureEach {
 //    kotlinOptions {
-//        freeCompilerArgs = ["-Xjsr305=strict"]
-//        jvmTarget = "17"
+//        freeCompilerArgs = []
+//        jvmTarget = "21"
 //    }
 //}
 
@@ -58,12 +69,11 @@ dependencies {
 //}
 
 tasks.register("updateVersion") {
-    var versionFileDir =
-        projectDir.getAbsolutePath() + File.separatorChar + "src" + File.separatorChar + "main" + File.separatorChar + "java" + File.separatorChar + "cn" + File.separatorChar + "zjujri" + File.separatorChar + "workday" + File.separatorChar + "module" + File.separatorChar + "Version.kt"
-    var oldBuildTime = oldValue(versionFileDir, "buildTime")
-    var index = oldBuildTime.indexOf("=")
-    var buildTime = oldBuildTime.substring(0, index + 1) + " \"" + Date() + "\""
-    var updateContext = File(versionFileDir).readText().replace(oldBuildTime, buildTime)
+    val versionFileDir ="${projectDir.absolutePath}${File.separatorChar}src${File.separatorChar}main${File.separatorChar}java${File.separatorChar}cn${File.separatorChar}zjujri${File.separatorChar}workday${File.separatorChar}module${File.separatorChar}Version.kt"
+    val oldBuildTime = oldValue(versionFileDir, "buildTime")
+    val index = oldBuildTime.indexOf("=")
+    val buildTime = "${oldBuildTime.substring(0, index + 1)}\"${Date()}\""
+    val updateContext = File(versionFileDir).readText().replace(oldBuildTime, buildTime)
     File(versionFileDir).writeText(updateContext)
 }
 

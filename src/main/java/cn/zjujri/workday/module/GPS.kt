@@ -9,6 +9,7 @@ data class GPS(
     @Schema(title = "维度")
     var latitude: Double?,
     @Schema(title = "海拔")
-    var seaLevel: Double?){
-    constructor():this(null,null,null)
+    var seaLevel: Double?
+) {
+    constructor() : this(null, null, null)
 }
