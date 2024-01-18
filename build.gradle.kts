@@ -4,7 +4,7 @@ import java.util.*
 
 plugins {
     id("java")
-    id("org.springframework.boot").version("3.2.0")
+    id("org.springframework.boot").version("3.2.1")
     id("io.spring.dependency-management").version("1.1.3")
     id("org.hibernate.orm").version("6.2.13.Final")
     kotlin("jvm").version("1.9.20")
@@ -16,9 +16,9 @@ plugins {
 group = "cn.zjujri"
 version = "0.0.7-SNAPSHOT"
 java {
-    setSourceCompatibility("17")
-    setTargetCompatibility("17")
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    setSourceCompatibility("21")
+    setTargetCompatibility("21")
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 
@@ -53,13 +53,13 @@ dependencies {
 
 tasks.withType<KotlinCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "21"
     kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
 
 }
 tasks.withType<KotlinJvmCompile>().configureEach {
 //    jvmTargetValidationMode.set(org.jetbrains.kotlin.gradle.dsl.jvm.JvmTargetValidationMode.WARNING)
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "21"
     kotlinOptions.freeCompilerArgs = listOf("-Xjsr305=strict")
 
 }
