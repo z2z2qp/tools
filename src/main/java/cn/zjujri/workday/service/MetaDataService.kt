@@ -4,7 +4,6 @@ import cn.zjujri.workday.util.toLocalDateTime
 import com.drew.imaging.ImageMetadataReader
 import com.drew.imaging.ImageProcessingException
 import com.drew.lang.GeoLocation
-import com.drew.metadata.exif.ExifIFD0Directory
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
 import org.springframework.stereotype.Service
@@ -52,7 +51,7 @@ class MetaDataService {
      * @param image 图片的输入流
      * @return 返回图片的创建时间，如果解析失败则返回空
      */
-    fun parseCreatetime(image:InputStream):Optional<LocalDateTime>{
+    fun parseCreatetime(image: InputStream): Optional<LocalDateTime> {
         val metaData = ImageMetadataReader.readMetadata(image)
 //        val exifIFD0Directory = metaData.directories //getFirstDirectoryOfType(ExifIFD0Directory::class.java)
 //        exifIFD0Directory.forEach {directory->
@@ -62,16 +61,20 @@ class MetaDataService {
 //                println(tag.tagType)
 //            }
 //        }
-        val exifSubIFD = metaData.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-        return exifSubIFD.tags
-            .stream()
-            .filter { it.tagName == "Date/Time Original" }
-            .findFirst()
-            .map{
-                it.description
-            }.map {
-                it.toLocalDateTime("yyyy:MM:dd HH:mm:ss")
-            }
+        val exifSubIFD: ExifSubIFDDirectory? = metaData.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+        return if (exifSubIFD == null) {
+            Optional.empty()
+        } else {
+            exifSubIFD.tags
+                .stream()
+                .filter { it.tagName == "Date/Time Original" }
+                .findFirst()
+                .map {
+                    it.description
+                }.map {
+                    it.toLocalDateTime("yyyy:MM:dd HH:mm:ss")
+                }
+        }
     }
 
 }

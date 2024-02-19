@@ -67,7 +67,7 @@ class WorkdayController(val service: WorkdayService) {
         var localDate = LocalDate.now()
         // 如果传入了日期参数，则将当前日期设置为传入的日期
         if (!Objects.isNull(date)) {
-            localDate = LocalDate.parse(date, formatter)
+            localDate = LocalDate.parse(date!!, formatter)
         }
         // 获取最小年份
         val min = service.minYear()

@@ -7,7 +7,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MetaDataServiceTest {
     @Autowired
     private val service: MetaDataService? = null
