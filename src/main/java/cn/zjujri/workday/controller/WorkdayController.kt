@@ -46,11 +46,12 @@ class WorkdayController(val service: WorkdayService) {
         ) end: String?
     ): Result<List<Workday>> {
         // 判断时间段是否为空
-        if (start === null || end === null) {
-            return Result.fail("时间段不能为空")
+        return if (start === null || end === null) {
+            Result.fail("时间段不能为空")
+        } else {
+            // 返回工作日天数的结果
+            Result.ok(service.isWorkdays(LocalDate.parse(start, formatter), LocalDate.parse(end, formatter)))
         }
-        // 返回工作日天数的结果
-        return Result.ok(service.isWorkdays(LocalDate.parse(start, formatter), LocalDate.parse(end, formatter)))
     }
 
 
@@ -63,11 +64,13 @@ class WorkdayController(val service: WorkdayService) {
             description = "查询的日期格式为yyyy-MM-dd"
         ) date: String?
     ): Result<Workday> {
-        // 获取当前日期
-        var localDate = LocalDate.now()
-        // 如果传入了日期参数，则将当前日期设置为传入的日期
-        if (!Objects.isNull(date)) {
-            localDate = LocalDate.parse(date!!, formatter)
+
+        val localDate = if (!Objects.isNull(date)) {
+            // 如果传入了日期参数，则将当前日期设置为传入的日期
+            LocalDate.parse(date!!, formatter)
+        } else {
+            // 获取当前日期
+            LocalDate.now()
         }
         // 获取最小年份
         val min = service.minYear()
