@@ -5,6 +5,7 @@ import cn.zjujri.workday.repository.WorkdayRepository
 import org.springframework.stereotype.Service
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.util.stream.Collectors
 import kotlin.jvm.optionals.getOrElse
 
 @Service
@@ -37,17 +38,18 @@ class WorkdayService(private val workdayRepository: WorkdayRepository) {
         //查询时间段内所有假日办发布信息，并修改为Map<LocalDate, Workday?>
         val dbResult = workdayRepository.findByDateGreaterThanEqualAndDateLessThanEqual(start, end)
             .stream()
-            .collect(
-                { HashMap() },
-                { r: HashMap<LocalDate, Workday>, t: Workday ->
-                    r[t.date!!] = t
-                },
-                { t, u -> t.putAll(u) })
+            .collect(Collectors.toMap({ it.date }, { it }, { k1, _ -> k1 }))
+//                { HashMap() },
+//                { r: HashMap<LocalDate, Workday>, t: Workday ->
+//                    r[t.date!!] = t
+//                },
+//                { t, u -> t.putAll(u) })
         val result = ArrayList<Workday>()
         var day = start
         while (!day.isAfter(end)) {//循环从起始日期开始到结束日期
-            val isWorkday = dbResult[day]?.workday ?: if ( day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY) 0 else 1
-            result.add(Workday(day,isWorkday))
+            val isWorkday = dbResult[day]?.workday
+                ?: if (day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY) 0 else 1
+            result.add(Workday(day, isWorkday))
             day = day.plusDays(1)
         }
         return result
