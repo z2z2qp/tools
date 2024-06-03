@@ -4,7 +4,7 @@ import java.util.*
 
 plugins {
     id("java")
-    id("org.springframework.boot").version("3.2.1")
+    id("org.springframework.boot").version("3.3.0")
     id("io.spring.dependency-management").version("1.1.3")
     id("org.hibernate.orm").version("6.2.13.Final")
     kotlin("jvm").version("1.9.20")
@@ -18,7 +18,9 @@ version = "0.0.7-SNAPSHOT"
 java {
     setSourceCompatibility("21")
     setTargetCompatibility("21")
-    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    toolchain{
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 
