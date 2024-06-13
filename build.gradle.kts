@@ -5,8 +5,8 @@ import java.util.*
 plugins {
     id("java")
     id("org.springframework.boot").version("3.3.0")
-    id("io.spring.dependency-management").version("1.1.3")
-    id("org.hibernate.orm").version("6.2.13.Final")
+    id("io.spring.dependency-management").version("1.1.5")
+    id("org.hibernate.orm").version("6.5.2.Final")
     kotlin("jvm").version("1.9.20")
     kotlin("plugin.spring").version("1.9.20")
     kotlin("plugin.jpa").version("1.9.20")
@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "cn.zjujri"
-version = "0.0.7-SNAPSHOT"
+version = "0.0.8-SNAPSHOT"
 java {
     setSourceCompatibility("21")
     setTargetCompatibility("21")
@@ -42,11 +42,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0")
 //    implementation("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.3.0")
-    implementation("com.drewnoakes:metadata-extractor:2.18.0")
-    implementation("org.flywaydb:flyway-core:9.16.0")
+    implementation("com.drewnoakes:metadata-extractor:2.19.0")
+    implementation("org.flywaydb:flyway-core:10.15.0")
     runtimeOnly("com.h2database:h2:2.2.224")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
