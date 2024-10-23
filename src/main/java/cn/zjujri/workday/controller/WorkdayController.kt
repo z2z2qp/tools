@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import reactor.core.publisher.Mono
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.DateTimeFormatter
@@ -44,13 +45,14 @@ class WorkdayController(val service: WorkdayService) {
             name = "end",
             description = "查询的日期格式为yyyy-MM-dd"
         ) end: String?
-    ): Result<List<Workday>> {
+    ): Mono<Result<List<Workday>>> {
         // 判断时间段是否为空
         return if (start === null || end === null) {
-            Result.fail("时间段不能为空")
+            Mono.just(Result.fail("时间段不能为空"))
         } else {
             // 返回工作日天数的结果
-            Result.ok(service.isWorkdays(LocalDate.parse(start, formatter), LocalDate.parse(end, formatter)))
+            service.isWorkdays(LocalDate.parse(start, formatter), LocalDate.parse(end, formatter))
+                .map { Result.ok(it) }
         }
     }
 
@@ -63,7 +65,7 @@ class WorkdayController(val service: WorkdayService) {
             name = "date",
             description = "查询的日期格式为yyyy-MM-dd"
         ) date: String?
-    ): Result<Workday> {
+    ): Mono<Result<Workday>> {
 
         val localDate = if (!Objects.isNull(date)) {
             // 如果传入了日期参数，则将当前日期设置为传入的日期
@@ -78,14 +80,14 @@ class WorkdayController(val service: WorkdayService) {
         val max = service.maxYear()
         // 如果传入的日期在最小年份之前，则返回失败结果
         if (localDate.isBefore(LocalDate.of(min, Month.JANUARY, 1))) {
-            return Result.fail("日期不能早与 $min 年")
+            return Mono.just(Result.fail("日期不能早与 $min 年"))
         }
         // 如果传入的日期在最大年份之后，则返回失败结果
         if (localDate.isAfter(LocalDate.of(max, Month.DECEMBER, 31))) {
-            return Result.fail("日期不能晚于 $max 年")
+            return Mono.just(Result.fail("日期不能晚于 $max 年"))
         }
         // 调用服务类的方法判断传入的日期是否为工作日，并返回成功结果
-        return Result.ok(service.isWorkday(localDate))
+        return service.isWorkday(localDate).map { Result.ok(it) }
     }
 
 
