@@ -30,6 +30,7 @@ repositories {
 //        url = uri("http://10.100.1.235:8081/repository/maven-public/")
 //
 //    }
+    mavenLocal()
     mavenCentral()
 }
 
@@ -46,7 +47,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.5.0")
 //    implementation("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.3.0")
     implementation("com.drewnoakes:metadata-extractor:2.19.0")
-    implementation("org.flywaydb:flyway-core:10.15.0")
+    implementation("org.flywaydb:flyway-core:10.15.2")
     runtimeOnly("com.h2database:h2:2.2.224")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
