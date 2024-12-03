@@ -2,6 +2,7 @@ package cn.zjujri.workday.controller
 
 import cn.zjujri.workday.module.CurrentWeather
 import cn.zjujri.workday.module.Result
+import cn.zjujri.workday.service.CityService
 import cn.zjujri.workday.service.WeatherService
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonMappingException
@@ -21,7 +22,10 @@ import reactor.core.publisher.Mono
 @Tag(name = "天气接口")
 @RestController
 @RequestMapping("/weather")
-class WeatherController(private val weatherService: WeatherService) {
+class WeatherController(
+    private val weatherService: WeatherService,
+    private val cityService: CityService
+) {
 
     companion object {
         const val DEFAULT_TIMEZONE = "Asia/Shanghai"
@@ -76,44 +80,72 @@ class WeatherController(private val weatherService: WeatherService) {
      */
     @Operation(
         summary = "当前天气", parameters = [
-            Parameter(name = "longitude", description = "经度", required = true),
-            Parameter(name = "latitude", description = "纬度", required = true)
+            Parameter(name = "longitude", description = "经度", required = false),
+            Parameter(name = "latitude", description = "纬度", required = false),
+            Parameter(name = "cityName", description = "城市名称", required = false)
         ]
     )
     @GetMapping("current")
     fun weatherCurrent(
-        @NotNull @RequestParam(name = "longitude") longitude: Double,
-        @NotNull @RequestParam(name = "latitude") latitude: Double
+        @RequestParam(name = "longitude", required = false) lon: Double?,
+        @RequestParam(name = "latitude", required = false) lat: Double?,
+        @RequestParam(name = "cityName", required = false) cityName: String?
     ): Mono<Result<CurrentWeather>> {
-        return weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true).map {
-            // 将返回的JSON字符串转换为Map对象
-            val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(it) as Map<String, Any>
-            // 获取当前天气信息
-            val currentWeather = value["current_weather"] as Map<*, *>
-            // 获取温度信息
-            val temperature = currentWeather["temperature"] as Number
-            // 获取风速信息
-            val windSpeed = currentWeather["windspeed"] as Number
-            // 获取风向信息
-            val windDirection = currentWeather["winddirection"] as Number
-            // 获取天气代码信息
-            val weatherCode = currentWeather["weathercode"] as Int
-            // 获取天气信息发生时间
-            val time = currentWeather["time"] as String
-            // 创建并返回当前天气结果对象
-            Result.ok(
-                CurrentWeather(
-                    temperature,
-                    windSpeed,
-                    windDirection,
-                    weatherCode,
-                    getWeather(weatherCode),
-                    time
-                )
-            )
+        if (cityName === null && (lat === null || lon === null)) {
+            throw IllegalArgumentException("参数异常,城市名称和经纬度不能同时为空")
+        }
+        var latitude: Double
+        var longitude: Double
+        if (lat === null || lon === null) {
+            val city = cityService.findByName(cityName!!)
+            if (city == null) {
+                throw IllegalArgumentException("城市名称不存在")
+            }
+            latitude = city.latitude!!
+            longitude = city.longitude!!
+        } else {
+            latitude = lat
+            longitude = lon
         }
 
+        return weatherService.forecastCurrent(latitude, longitude, DEFAULT_TIMEZONE, true)
+            .map {
+                weatherFormat(it)
+            }
+            .map {
+                Result.ok(it)
+            }
+
     }
+
+
+    private fun weatherFormat(string: String?): CurrentWeather {
+        // 将返回的JSON字符串转换为Map对象
+        val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(string) as Map<String, Any>
+        // 获取当前天气信息
+        val currentWeather = value["current_weather"] as Map<*, *>
+        // 获取温度信息
+        val temperature = currentWeather["temperature"] as Number
+        // 获取风速信息
+        val windSpeed = currentWeather["windspeed"] as Number
+        // 获取风向信息
+        val windDirection = currentWeather["winddirection"] as Number
+        // 获取天气代码信息
+        val weatherCode = currentWeather["weathercode"] as Int
+        // 获取天气信息发生时间
+        val time = currentWeather["time"] as String
+        // 创建并返回当前天气结果对象
+        return CurrentWeather(
+            temperature,
+            windSpeed,
+            windDirection,
+            weatherCode,
+            getWeather(weatherCode),
+            time
+
+        )
+    }
+
 
     /**
      * Code Description
