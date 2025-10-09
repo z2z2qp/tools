@@ -1,0 +1,1 @@
+insert into `workday` values ('2025-10-08',0,'国庆中秋');
