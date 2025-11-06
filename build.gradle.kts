@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "cn.zjujri"
-version = "0.1.1-SNAPSHOT"
+version = "0.1.2-SNAPSHOT"
 java {
     setSourceCompatibility("21")
     setTargetCompatibility("21")
