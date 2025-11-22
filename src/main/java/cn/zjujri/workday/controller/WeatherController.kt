@@ -72,8 +72,8 @@ class WeatherController(
     }
 
     /**
-     * @param longitude 经度
-     * @param latitude 维度
+     * @param lon 经度
+     * @param lat 维度
      * @return
      * @throws JsonMappingException
      * @throws JsonProcessingException
@@ -97,10 +97,7 @@ class WeatherController(
         var latitude: Double
         var longitude: Double
         if (lat === null || lon === null) {
-            val city = cityService.findByName(cityName!!)
-            if (city == null) {
-                throw IllegalArgumentException("城市名称不存在")
-            }
+            val city = cityService.findByName(cityName!!) ?: throw IllegalArgumentException("城市名称不存在")
             latitude = city.latitude!!
             longitude = city.longitude!!
         } else {
@@ -121,7 +118,7 @@ class WeatherController(
 
     private fun weatherFormat(string: String?): CurrentWeather {
         // 将返回的JSON字符串转换为Map对象
-        val value = ObjectMapper().readerForMapOf(Object::class.java).readValue(string) as Map<String, Any>
+        val value = ObjectMapper().readerForMapOf(Any::class.java).readValue(string) as Map<String, Any>
         // 获取当前天气信息
         val currentWeather = value["current_weather"] as Map<*, *>
         // 获取温度信息

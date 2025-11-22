@@ -24,7 +24,7 @@ class WorkdayController(val service: WorkdayService) {
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
 
-    var buildTime: String = Version.buildTime
+    var buildTime: String = Version.BUILD_TIME
 
     @Operation(summary = "项目构建时间")
     @GetMapping("/buildTime")

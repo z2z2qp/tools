@@ -25,7 +25,7 @@ interface WorkdayRepository : JpaRepository<Workday, LocalDate> {
      * @return 最大日期字符串
      */
     @Query(value = "select max(date) from workday ", nativeQuery = true)
-    fun maxDate(): String
+    fun maxDate(): LocalDate
 
     /**
      * 获取工作日表中的最小日期
@@ -33,5 +33,5 @@ interface WorkdayRepository : JpaRepository<Workday, LocalDate> {
      * @return 最小日期字符串
      */
     @Query(value = "select min(date) from workday ", nativeQuery = true)
-    fun minDate(): String
+    fun minDate(): LocalDate
 }

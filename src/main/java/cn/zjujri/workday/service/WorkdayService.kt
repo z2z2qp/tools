@@ -36,13 +36,11 @@ class WorkdayService(private val workdayRepository: WorkdayRepository) {
     }
 
     fun minYear(): Int {
-        val year = workdayRepository.minDate().substring(0, 4)
-        return year.toInt()
+        return workdayRepository.minDate().year
     }
 
     fun maxYear(): Int {
-        val year = workdayRepository.maxDate().substring(0, 4)
-        return year.toInt()
+        return  workdayRepository.maxDate().year
 
     }
 
