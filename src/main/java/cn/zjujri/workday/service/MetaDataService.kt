@@ -6,6 +6,7 @@ import com.drew.imaging.ImageProcessingException
 import com.drew.lang.GeoLocation
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.exif.GpsDirectory
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.io.IOException
 import java.io.InputStream
@@ -19,6 +20,8 @@ import java.util.*
  */
 @Service
 class MetaDataService {
+
+    private val log = LoggerFactory.getLogger(MetaDataService::class.java)
 
     /**
      * 解析图片地理位置信息。
@@ -36,10 +39,10 @@ class MetaDataService {
             return Optional.ofNullable(gps.geoLocation)
         } catch (e: ImageProcessingException) {
             // 处理图片处理异常
-            e.printStackTrace()
+            log.error("解析图片位置信息失败", e)
         } catch (e: IOException) {
             // 处理IO异常
-            e.printStackTrace()
+            log.error("读取图片失败", e)
         }
         // 返回空的地理位置信息
         return Optional.empty()
@@ -66,10 +69,10 @@ class MetaDataService {
                     .map { it.toLocalDateTime("yyyy:MM:dd HH:mm:ss") }
             }
         } catch (e: ImageProcessingException) {
-            e.printStackTrace()
+            log.error("解析图片创建时间失败", e)
             Optional.empty()
         } catch (e: IOException) {
-            e.printStackTrace()
+            log.error("读取图片失败", e)
             Optional.empty()
         }
     }

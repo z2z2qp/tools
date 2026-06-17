@@ -31,9 +31,9 @@ class ImageController(private val metaDataService: MetaDataService) {
                 val gps = metaDataService.parseLocation(dataBuffer.asInputStream())
                     .map { geoLocation ->
                         GPS(geoLocation.longitude, geoLocation.latitude, null)
-                    }.orElse(GPS())
+                    }
                 // 返回解析结果
-                Result.ok(gps)
+                if (gps.isPresent) Result.ok(gps.get()) else Result.fail("图片无位置信息")
             }.next()
     }
 
@@ -47,9 +47,8 @@ class ImageController(private val metaDataService: MetaDataService) {
                 // 解析位置数据并获取经纬度，如果解析成功则创建GPS对象，否则返回空的GPS对象
                 val createTime = metaDataService.parseCreatetime(dataBuffer.asInputStream())
                     .map { it.toFmtString() }
-                    .orElse(null)
                 // 返回解析结果
-                Result.ok(createTime)
+                if (createTime.isPresent) Result.ok(createTime.get()) else Result.fail("图片无创建时间")
             }.next()
     }
 

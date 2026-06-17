@@ -46,17 +46,19 @@ class WorkdayService(private val workdayRepository: WorkdayRepository) {
 
     fun isWorkdays(start: LocalDate, end: LocalDate): Mono<List<Workday>> {
         //查询时间段内所有假日办发布信息，并修改为Map<LocalDate, Workday?>
-        return Mono.zip(Mono.just(start), Mono.just(end))
-            .map { tp2 ->
-                val dbResult = workdayRepository.findByDateGreaterThanEqualAndDateLessThanEqual(tp2.t1, tp2.t2)
+        return Mono.just(Pair(start, end))
+            .map { (s, e) ->
+                val dbResult = workdayRepository.findByDateGreaterThanEqualAndDateLessThanEqual(s, e)
                     .stream()
                     .collect(Collectors.toMap({ it.date }, { it }, { k1, _ -> k1 }))
                 val result = ArrayList<Workday>()
                 var day = start
                 while (!day.isAfter(end)) {//循环从起始日期开始到结束日期
-                    val isWorkday = dbResult[day]?.workday
-                        ?: if (day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY) 0 else 1
-                    result.add(Workday(day, isWorkday))
+                    val workday = dbResult[day] ?: Workday(
+                        day,
+                        if (day.dayOfWeek == DayOfWeek.SUNDAY || day.dayOfWeek == DayOfWeek.SATURDAY) 0 else 1
+                    )
+                    result.add(workday)
                     day = day.plusDays(1)
                 }
                 result

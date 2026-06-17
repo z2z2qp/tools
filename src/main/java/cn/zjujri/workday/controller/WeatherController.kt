@@ -29,6 +29,7 @@ class WeatherController(
 
     companion object {
         const val DEFAULT_TIMEZONE = "Asia/Shanghai"
+        private val objectMapper = ObjectMapper()
     }
 
 
@@ -118,7 +119,7 @@ class WeatherController(
 
     private fun weatherFormat(string: String): CurrentWeather {
         // 将返回的JSON字符串转换为Map对象
-        val value = ObjectMapper().readerForMapOf(Any::class.java).readValue(string) as Map<String, Any>
+        val value = objectMapper.readerForMapOf(Any::class.java).readValue(string) as Map<String, Any>
         // 获取当前天气信息
         val currentWeather = value["current_weather"] as Map<*, *>
         // 获取温度信息
