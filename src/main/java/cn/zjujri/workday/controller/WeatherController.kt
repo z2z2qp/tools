@@ -44,11 +44,11 @@ class WeatherController(
     )
     @GetMapping("history")
     fun weatherHistory(
-        @NotNull @RequestParam(name = "longitude") longitude: Double?,
-        @NotNull @RequestParam(name = "latitude") latitude: Double?,
-        @NotNull @RequestParam(name = "startDate") startDate: String?,
-        @NotNull @RequestParam(name = "endDate") endDate: String?,
-        @NotNull @RequestParam(name = "hourly") hourly: String?
+        @NotNull @RequestParam(name = "longitude") longitude: Double,
+        @NotNull @RequestParam(name = "latitude") latitude: Double,
+        @NotNull @RequestParam(name = "startDate") startDate: String,
+        @NotNull @RequestParam(name = "endDate") endDate: String,
+        @NotNull @RequestParam(name = "hourly") hourly: String
     ): Mono<String> {
         // 创建一个String类型的ArrayList对象list
 
@@ -59,7 +59,7 @@ class WeatherController(
             list.add("temperature_2m") // 如果hourly为空，则向list中添加"temperature_2m"
         } else {
             // 将hourly按照逗号进行分割，遍历分割后的每一个元素
-            for (s in hourly!!.split(",")) {
+            for (s in hourly.split(",")) {
                 // 判断s是否为空
                 if (!ObjectUtils.isEmpty(s)) {
                     list.add(s) // 如果s不为空，则向list中添加s
@@ -92,12 +92,12 @@ class WeatherController(
         @RequestParam(name = "cityName", required = false) cityName: String?
     ): Mono<Result<CurrentWeather>> {
         if (cityName === null && (lat === null || lon === null)) {
-            throw IllegalArgumentException("参数异常,城市名称和经纬度不能同时为空")
+            return Mono.error(IllegalArgumentException("参数异常,城市名称和经纬度不能同时为空"))
         }
         var latitude: Double
         var longitude: Double
         if (lat === null || lon === null) {
-            val city = cityService.findByName(cityName!!) ?: throw IllegalArgumentException("城市名称不存在")
+            val city = cityService.findByName(cityName!!) ?: return Mono.error(IllegalArgumentException("城市名称不存在"))
             latitude = city.latitude!!
             longitude = city.longitude!!
         } else {
@@ -167,17 +167,33 @@ class WeatherController(
     private fun getWeather(code: Int): String {
         return when (code) {
             0 -> "晴天"
-            1, 2, 3 -> "大部多云"
-            45, 48 -> "雾"
-            51, 53, 55 -> "毛毛雨"
-            56, 57 -> "冻毛毛雨"
-            61, 63 -> "雨"
-            66, 67 -> "冻雨"
-            71, 73, 75 -> "阵雪"
+            1 -> "少云"
+            2 -> "多云"
+            3 -> "阴天"
+            45 -> "雾"
+            48 -> "雾凇"
+            51 -> "小毛毛雨"
+            53 -> "中毛毛雨"
+            55 -> "大毛毛雨"
+            56 -> "小冻毛毛雨"
+            57 -> "大冻毛毛雨"
+            61 -> "小雨"
+            63 -> "中雨"
+            65 -> "大雨"
+            66 -> "小冻雨"
+            67 -> "大冻雨"
+            71 -> "小雪"
+            73 -> "中雪"
+            75 -> "大雪"
             77 -> "雪粒"
-            80, 81, 82 -> "雨夹雪"
-            85, 86 -> "大雪"
-            96 -> "雷暴"
+            80 -> "小阵雨"
+            81 -> "中阵雨"
+            82 -> "大阵雨"
+            85 -> "小阵雪"
+            86 -> "大阵雪"
+            95 -> "雷暴"
+            96 -> "小雷暴伴冰雹"
+            99 -> "大雷暴伴冰雹"
             else -> "未知"
         }
     }

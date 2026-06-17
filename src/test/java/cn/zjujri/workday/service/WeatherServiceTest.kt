@@ -7,7 +7,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.web.WebAppConfiguration
 
 /**
  *
@@ -16,7 +15,6 @@ import org.springframework.test.context.web.WebAppConfiguration
  * @since 2023/11/21 11:11
  */
 @SpringBootTest
-@WebAppConfiguration
 class WeatherServiceTest {
     @Autowired
     private val service: WeatherService? = null
