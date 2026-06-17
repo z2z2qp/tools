@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "cn.zjujri"
-version = "0.1.2-SNAPSHOT"
+version = "0.1.3-SNAPSHOT"
 java {
     setSourceCompatibility("25")
     setTargetCompatibility("25")
@@ -46,11 +46,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
-    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.0-M1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:3.0.3")
 //    implementation("com.github.xiaoymin:knife4j-openapi3-spring-boot-starter:4.3.0")
-    implementation("com.drewnoakes:metadata-extractor:2.19.0")
-    implementation("org.flywaydb:flyway-core:11.17.0")
+    implementation("com.drewnoakes:metadata-extractor:2.20.0")
+    implementation("org.flywaydb:flyway-core:12.8.1")
     runtimeOnly("com.h2database:h2:2.4.240")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
