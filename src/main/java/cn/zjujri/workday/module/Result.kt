@@ -19,7 +19,7 @@ data class Result<T>(
         }
 
         fun <T> fail(message: String): Result<T> {
-            return Result(200, message, null)
+            return Result(500, message, null)
         }
     }
 }

@@ -52,28 +52,25 @@ class MetaDataService {
      * @return 返回图片的创建时间，如果解析失败则返回空
      */
     fun parseCreatetime(image: InputStream): Optional<LocalDateTime> {
-        val metaData = ImageMetadataReader.readMetadata(image)
-//        val exifIFD0Directory = metaData.directories //getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-//        exifIFD0Directory.forEach {directory->
-//            directory.tags.forEach {tag ->
-//                println(tag)
-//                println(tag.tagName)
-//                println(tag.tagType)
-//            }
-//        }
-        val exifSubIFD: ExifSubIFDDirectory? = metaData.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-        return if (exifSubIFD == null) {
+        return try {
+            val metaData = ImageMetadataReader.readMetadata(image)
+            val exifSubIFD: ExifSubIFDDirectory? = metaData.getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+            if (exifSubIFD == null) {
+                Optional.empty()
+            } else {
+                exifSubIFD.tags
+                    .stream()
+                    .filter { it.tagName == "Date/Time Original" }
+                    .findFirst()
+                    .map { it.description }
+                    .map { it.toLocalDateTime("yyyy:MM:dd HH:mm:ss") }
+            }
+        } catch (e: ImageProcessingException) {
+            e.printStackTrace()
             Optional.empty()
-        } else {
-            exifSubIFD.tags
-                .stream()
-                .filter { it.tagName == "Date/Time Original" }
-                .findFirst()
-                .map {
-                    it.description
-                }.map {
-                    it.toLocalDateTime("yyyy:MM:dd HH:mm:ss")
-                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Optional.empty()
         }
     }
 

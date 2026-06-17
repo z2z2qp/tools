@@ -116,7 +116,7 @@ class WeatherController(
     }
 
 
-    private fun weatherFormat(string: String?): CurrentWeather {
+    private fun weatherFormat(string: String): CurrentWeather {
         // 将返回的JSON字符串转换为Map对象
         val value = ObjectMapper().readerForMapOf(Any::class.java).readValue(string) as Map<String, Any>
         // 获取当前天气信息
